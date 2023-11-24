@@ -1,10 +1,9 @@
 export interface ICreateProduct {
     nome: string;
-    dataFabricacao: Date;
-    dataValidade: Date;
-    quantidade: number
+    dataFabricacao:  Date;
+    dataVencimento: Date;
+    quantidade: number;
     valorUnitario: number;
-    valorTotal: number;
     perecivel: boolean;
 }
 
