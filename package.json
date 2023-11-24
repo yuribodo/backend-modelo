@@ -7,7 +7,8 @@
     "start": "node ./build/index.js",
     "start-dev" :"tsx --watch src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"tsc --build"
+    "build":"tsc --build",
+    "init-bd": "npx prisma migrate dev --name init"
   },
   "keywords": [],
   "author": "",
