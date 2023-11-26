@@ -1,8 +1,12 @@
-// Require the framework and instantiate it
+
 import fastify from 'fastify';
+import products from "./routes/product";
+import sales from "./routes/sales";
 const app = fastify({ logger: true });
+
 // Declarando as rotas dos produtos
-app.register(require("./routes/product"))
+app.register(products);
+app.register(sales);
 
 // Run the server!
 app

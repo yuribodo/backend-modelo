@@ -10,15 +10,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Produto {
-  id                 Int       @id @default(autoincrement())
-  nome               String    // Nome do Produto
-  dataFabricacao     DateTime  // Data de fabricação
-  dataVencimento     DateTime  // Data de vencimento
-  quantidade         Int       // Quantidade do produto
-  valorUnitario      Float     // Valor unitário
-  valorTotal         Float     // Valor total
-  perecivel          Boolean   // Produto perecível ou não
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+model Vendas {
+  id                  Int       @id @default(autoincrement())
+  produtosVendidos     ProdutoVendido[]   // Relação com os produtos vendidos nesta venda
+  valorTotal          Float               // Valor total da venda
+  cpfComprador        String?             // CPF do comprador (opcional)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
+
+model Produto {
+  id                  Int       @id @default(autoincrement())
+  nome                String    // Nome do Produto
+  dataFabricacao      DateTime  // Data de fabricação
+  dataVencimento      DateTime  // Data de vencimento
+  quantidade          Int       // Quantidade do produto
+  valorUnitario       Float     // Valor unitário
+  valorTotal          Float     // Valor total 
+  perecivel           Boolean   // Produto perecível ou não
+  vendas              ProdutoVendido[]   // Relação com as vendas que incluem este produto
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model ProdutoVendido {
+  id                  Int       @id @default(autoincrement())
+  produto             Produto   @relation(fields: [produtoId], references: [id])
+  venda               Vendas    @relation(fields: [vendaId], references: [id])
+  quantidade          Int       // Quantidade do produto vendido nesta venda
+  produtoId           Int       // Chave estrangeira referenciando o Produto
+  vendaId             Int       // Chave estrangeira referenciando a Venda
+  @@index([produtoId, vendaId], name: "produto_venda_unique") // Índice para garantir a unicidade da relação
+}
+

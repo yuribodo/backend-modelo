@@ -57,7 +57,17 @@ const productRoutes = async (fastify: FastifyInstance) => {
 
     fastify.get("/products", async function handler(req, res) {
         try {
-            const allProducts = await prisma.produto.findMany();
+            const allProducts = await prisma.produto.findMany(
+                {
+                    select:{
+                        id:true,
+                        nome:true,
+                        valorUnitario:true,
+                        dataVencimento:true,
+                        
+                    }
+                }
+            );
             res.code(201).send(allProducts);
         } catch (err) {
             console.error(err);
