@@ -82,6 +82,10 @@ const salesRoutes = async (fastify: FastifyInstance) => {
                     }
                 }
             )
+            if (!infoNotaFiscal) {
+                res.code(404).send({ error: 'Venda não encontrada' });
+                return;
+              }
             res.code(201).send(infoNotaFiscal);
         } catch (error) {
             console.log(error)
