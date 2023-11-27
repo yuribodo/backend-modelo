@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import { ICreateProduct } from "../interfaces/createProduct.interface";
 import verifyName from "../controllers/products/find.name";
 import prisma from "../services/prisma.services";
+import products from "../controllers/products/read.products";
 
 const productRoutes = async (fastify: FastifyInstance) => {
     fastify.post('/product/create', async function handler(request, reply) {
@@ -10,7 +11,7 @@ const productRoutes = async (fastify: FastifyInstance) => {
             const products = await verifyName(product.nome);
             if (products.length = 0) {
 
-                reply.status(500).send({ message: "Produto informado já cadastrado" })
+                reply.status(500).send({ message: "Produto informado já cadastrado, atualize as informações ou crie um novo." })
             } else {
                 const novoProduto = await prisma.produto.create({
                     data: {
@@ -18,8 +19,10 @@ const productRoutes = async (fastify: FastifyInstance) => {
                         dataFabricacao: new Date(product.dataFabricacao),
                         dataVencimento: new Date(product.dataVencimento),
                         quantidade: product.quantidade,
+                        quantidadeInicial: product.quantidade,
                         valorUnitario: product.valorUnitario,
                         valorTotal: (product.quantidade * product.valorUnitario),
+                        valorTotalInicial: (product.quantidade * product.valorUnitario),
                         perecivel: product.perecivel,
                     },
                 });
@@ -55,25 +58,8 @@ const productRoutes = async (fastify: FastifyInstance) => {
         }
     });
 
-    fastify.get("/products", async function handler(req, res) {
-        try {
-            const allProducts = await prisma.produto.findMany(
-                {
-                    select:{
-                        id:true,
-                        nome:true,
-                        valorUnitario:true,
-                        dataVencimento:true,
-                        
-                    }
-                }
-            );
-            res.code(201).send(allProducts);
-        } catch (err) {
-            console.error(err);
-            res.status(500).send({ message: "Erro ao consultar produtos" })
-        }
-    })
+    fastify.get("/products",products
+    );
     fastify.get("/product/findBySell", async function handler(req: FastifyRequest<{ Querystring: { nome: string } }>, res) {
         const { nome } = req.query;
         const nomeLowerCase = nome.toLowerCase();
