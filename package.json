@@ -5,24 +5,30 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./build/index.js",
-    "start-dev" :"tsx --watch src/index.ts",
+    "start-dev": "tsx --watch src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"tsc --build",
-    "init-bd": "npx prisma migrate dev --name init"
+    "build": "tsc --build",
+    "database": "npx prisma migrate dev --name init",
+    "init-bd": "npx prisma migrate dev --name init",
+    "homossexual": "ping 8.8.8.8"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/fastify-cors": "^2.1.0",
     "@types/node": "^20.9.4",
     "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
   },
-  
   "dependencies": {
     "@prisma/client": "^5.6.0",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
     "fastify": "^4.24.3",
+    "fastify-cors": "^6.1.0",
     "tsx": "^4.4.0"
   }
 }

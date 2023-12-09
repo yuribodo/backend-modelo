@@ -1,0 +1,19 @@
+"scripts": {
+    "start": "node ./build/index.js",
+    "start-dev": "tsx --watch src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build",
+    "database": "npx prisma migrate dev --name init",
+    "init-bd": "npx prisma migrate dev --name init",
+    "homossexual": "ping 8.8.8.8"
+  },
+
+  ======== Manual pra iniciar (anti-otário) ========
+    0 - antes dos scripts "npm run" Ex: npm run gay
+
+    1 - iniciar o banco com o comando database || init-bd e roda o "npx prisma studio" (visualizar o banco)
+    2 - buildar (construir) o projeto build
+    3 - inicia o projeto
+        3.1 - Preferencialmente com o "start-dev"
+        3.2 - caso não funcione use o "start" e depois o "start-dev" dnv
+    4 - Pode se matar a programar.
