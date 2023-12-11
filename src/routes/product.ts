@@ -112,5 +112,48 @@ const productRoutes = async (fastify: FastifyInstance) => {
             res.status(500).send({ message: "Erro ao consultar produtos" })
         }
     })
+
+    fastify.put('/product/update/:productId', async function handler(req: FastifyRequest<{ Params: { productId: string } }>, res) {
+        const { productId } = req.params;
+        const updateProduct = req.body as ICreateProduct;
+      
+        try {
+          const updatedProduct = await prisma.produto.update({
+            where: {
+              id: parseInt(productId),
+            },
+            data: {
+              nome: updateProduct.nome,
+              dataFabricacao: new Date(updateProduct.dataFabricacao),
+              dataVencimento: new Date(updateProduct.dataVencimento),
+              quantidade: updateProduct.quantidade,
+              valorUnitario: updateProduct.valorUnitario,
+              valorTotal: updateProduct.quantidade * updateProduct.valorUnitario,
+              perecivel: updateProduct.perecivel,
+            },
+          });
+      
+          res.code(200).send(updatedProduct);
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Erro ao atualizar o produto' });
+        }
+      });
+    
+      fastify.delete("/product/delete/:productId", async function handler(req, res) {
+        const { productId } = req.params as { productId: string };
+        try {
+          const deletedProduct = await prisma.produto.delete({
+            where: {
+              id: parseInt(productId),
+            },
+          });
+      
+          res.code(200).send(deletedProduct);
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Erro ao excluir o produto' });
+        }
+      });
 }
 export default productRoutes;
