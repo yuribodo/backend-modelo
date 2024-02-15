@@ -139,6 +139,29 @@ const productRoutes = async (fastify: FastifyInstance) => {
           res.status(500).send({ message: 'Erro ao atualizar o produto' });
         }
       });
+
+      fastify.get('/product/update/:productId', async function handler(req, res) {
+        const { productId } = req.params as { productId: string };
+        console.log('Product ID:', productId);
+      
+        try {
+          const product = await prisma.produto.findUnique({
+            where: {
+              id: parseInt(productId),
+            },
+          });
+      
+          if (!product) {
+            res.status(404).send({ message: 'Produto não encontrado' });
+            return;
+          }
+      
+          res.code(200).send(product);
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Erro ao obter detalhes do produto' });
+        }
+      });
     
       fastify.delete("/product/delete/:productId", async function handler(req, res) {
         const { productId } = req.params as { productId: string };

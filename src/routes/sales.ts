@@ -7,6 +7,9 @@ const salesRoutes = async (fastify: FastifyInstance) => {
     const sales = await prisma.vendas.findMany();
     res.code(201).send(sales);
   });
+
+  
+
   fastify.post("/sales/create", async (req, res) => {
     try {
       const { produtosVendidos, valorTotal, cpfComprador } = req.body as ISalesCreate;
@@ -85,6 +88,8 @@ const salesRoutes = async (fastify: FastifyInstance) => {
       res.code(500).send({ error: 'Erro ao processar venda' });
     }
   });
+
+  
 
   fastify.get("/sales/receipt", async function handler(req: FastifyRequest<{ Querystring: { vendaId: number } }>, res) {
     const { vendaId } = req.query;

@@ -31,8 +31,10 @@ model Produto {
   valorTotalInicial   Float               // Valor total inicial 
   perecivel           Boolean             // Produto perecível ou não
   vendas              ProdutoVendido[]    // Relação com as vendas que incluem este produto
+  shoppingCarts       ShoppingCart[]      // Relação com os carrinhos que incluem este produto
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+  descricao           String              //descricao do produto
 }
 
 model ProdutoVendido {
@@ -43,5 +45,22 @@ model ProdutoVendido {
   produtoId           Int       // Chave estrangeira referenciando o Produto
   vendaId             Int       // Chave estrangeira referenciando a Venda
   @@index([produtoId, vendaId], name: "produto_venda_unique") // Índice para garantir a unicidade da relação
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String
+  email    String   @unique
+  // Adicione outros campos conforme necessário
+  shoppingCarts ShoppingCart[]
+}
+
+model ShoppingCart {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  items     Produto[] // Relação com os produtos na sacola de compras
 }
 
