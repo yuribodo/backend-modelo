@@ -5,6 +5,7 @@ export interface ICreateProduct {
     quantidade: number;
     valorUnitario: number;
     perecivel: boolean;
+    imagem: string; // Adicionamos o campo imagem
 }
 
 // model Produto {
@@ -18,4 +19,5 @@ export interface ICreateProduct {
 //     perecivel          Boolean   // Produto perecível ou não
 //     createdAt          DateTime  @default(now())
 //     updatedAt          DateTime  @updatedAt
+//     imagem             String    //Imagem
 //   }
