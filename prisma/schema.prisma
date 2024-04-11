@@ -34,7 +34,7 @@ model Produto {
   shoppingCarts       ShoppingCart[]      // Relação com os carrinhos que incluem este produto
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  
+  imagem              String    @default("")          // Novo atributo: URL ou caminho da imagem
 }
 
 model ProdutoVendido {
@@ -63,4 +63,3 @@ model ShoppingCart {
   user      User      @relation(fields: [userId], references: [id])
   items     Produto[] // Relação com os produtos na sacola de compras
 }
-

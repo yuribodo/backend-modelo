@@ -3,40 +3,50 @@ import { ICreateProduct } from "../interfaces/createProduct.interface";
 import verifyName from "../controllers/products/find.name";
 import prisma from "../services/prisma.services";
 import products from "../controllers/products/read.products";
+import path from 'path';
 
 const productRoutes = async (fastify: FastifyInstance) => {
-    fastify.post('/product/create', async function handler(request, reply) {
-        const product = request.body as ICreateProduct;
-        try {
-            const products = await verifyName(product.nome);
-            if (products.length = 0) {
+  fastify.post('/product/create', async function handler(request, reply) {
+    const product = request.body as ICreateProduct;
 
-                reply.status(500).send({ message: "Produto informado já cadastrado, atualize as informações ou crie um novo." })
-            } else {
-                const novoProduto = await prisma.produto.create({
-                    data: {
-                        nome: product.nome,
-                        dataFabricacao: new Date(product.dataFabricacao),
-                        dataVencimento: new Date(product.dataVencimento),
-                        quantidade: product.quantidade,
-                        quantidadeInicial: product.quantidade,
-                        valorUnitario: product.valorUnitario,
-                        valorTotal: (product.quantidade * product.valorUnitario),
-                        valorTotalInicial: (product.quantidade * product.valorUnitario),
-                        perecivel: product.perecivel,
-                    },
-                });
+    // Converta a imagem base64 de volta para um arquivo e salve-o no servidor
+    const base64Image = product.imagem;
+    const imageBuffer = Buffer.from(base64Image, 'base64');
+    const imageName = `${Date.now()}.jpg`; // Nome do arquivo gerado
+    const imagePath = path.join(__dirname, '../public/images', imageName);
+    try {
+        const products = await verifyName(product.nome);
+        if (products.length > 0) {
+            reply.status(500).send({ message: "Produto informado já cadastrado, atualize as informações ou crie um novo." })
+        } else {
+            const novoProduto = await prisma.produto.create({
+                data: {
+                    nome: product.nome,
+                    dataFabricacao: new Date(product.dataFabricacao),
+                    dataVencimento: new Date(product.dataVencimento),
+                    quantidade: product.quantidade,
+                    quantidadeInicial: product.quantidade,
+                    valorUnitario: product.valorUnitario,
+                    valorTotal: (product.quantidade * product.valorUnitario),
+                    valorTotalInicial: (product.quantidade * product.valorUnitario),
+                    perecivel: product.perecivel,
+                    imagem: product.imagem // Adiciona a imagem ao criar o produto
+                },
+            });
 
-                reply.code(201).send(novoProduto);
-            }
-        } catch (error) {
-            console.error(error);
-            reply.status(500).send({ message: 'Erro ao criar um novo produto' });
+            reply.code(201).send(novoProduto);
         }
-    });
+    } catch (error) {
+        console.error(error);
+        console.error('Erro ao salvar a imagem:', error);
+        reply.status(500).send({ message: 'Erro ao criar um novo produto' });
+    }
+});
 
     fastify.put("/product/update", async function handler(req, res) {
         const updateProducts = req.body as ICreateProduct;
+
+        
         try {
             const products = await prisma.produto.updateMany(
                 {
@@ -51,6 +61,7 @@ const productRoutes = async (fastify: FastifyInstance) => {
                         valorUnitario: updateProducts.valorUnitario,
                         valorTotal: (updateProducts.quantidade * updateProducts.valorUnitario),
                         perecivel: updateProducts.perecivel,
+                        imagem: updateProducts.imagem,
                     },
                 });
         } catch (err) {
@@ -130,6 +141,7 @@ const productRoutes = async (fastify: FastifyInstance) => {
               valorUnitario: updateProduct.valorUnitario,
               valorTotal: updateProduct.quantidade * updateProduct.valorUnitario,
               perecivel: updateProduct.perecivel,
+              imagem: updateProduct.imagem
             },
           });
       
