@@ -34,7 +34,7 @@ model Produto {
   shoppingCarts       ShoppingCart[]      // Relação com os carrinhos que incluem este produto
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  descricao           String              //descricao do produto
+  
 }
 
 model ProdutoVendido {
