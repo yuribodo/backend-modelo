@@ -30,7 +30,8 @@ const productRoutes = async (fastify: FastifyInstance) => {
                     valorTotal: (product.quantidade * product.valorUnitario),
                     valorTotalInicial: (product.quantidade * product.valorUnitario),
                     perecivel: product.perecivel,
-                    imagem: product.imagem // Adiciona a imagem ao criar o produto
+                    imagem: product.imagem, // Adiciona a imagem ao criar o produto
+                    qrcode: product.qrcode
                 },
             });
 

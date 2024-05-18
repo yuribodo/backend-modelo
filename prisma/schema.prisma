@@ -34,7 +34,8 @@ model Produto {
   shoppingCarts       ShoppingCart[]      // Relação com os carrinhos que incluem este produto
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  imagem              String    @default("")          // Novo atributo: URL ou caminho da imagem
+  imagem              String    @default("")          // base64 da imagem
+  qrcode              String    @default("") //qrcode
 }
 
 model ProdutoVendido {

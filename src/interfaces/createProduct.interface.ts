@@ -6,6 +6,7 @@ export interface ICreateProduct {
     valorUnitario: number;
     perecivel: boolean;
     imagem: string; // Adicionamos o campo imagem
+    qrcode: string
 }
 
 // model Produto {
