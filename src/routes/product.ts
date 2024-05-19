@@ -153,6 +153,41 @@ const productRoutes = async (fastify: FastifyInstance) => {
         }
       });
 
+      fastify.put<{ Params: { productId: string }, Body: { newQuantity: number } }>('/product/updateQuantity/:productId', async function handler(req, res) {
+        const { productId } = req.params;
+        const newQuantity: number = parseInt(req.body.quantidade);
+
+      
+        try {
+          // Primeiro, verifique se o produto existe
+          const existingProduct = await prisma.produto.findUnique({
+            where: {
+              id: parseInt(productId),
+            },
+          });
+      
+          if (!existingProduct) {
+            res.status(404).send({ message: 'Produto não encontrado' });
+            return;
+          }
+      
+          // Atualize a quantidade do produto
+          const updatedProduct = await prisma.produto.update({
+            where: {
+              id: parseInt(productId),
+            },
+            data: {
+              quantidade: newQuantity, // Aqui, newQuantity já é do tipo number
+            },
+          });
+      
+          res.code(200).send(updatedProduct);
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Erro ao atualizar a quantidade do produto' });
+        }
+      });
+
       fastify.get('/product/update/:productId', async function handler(req, res) {
         const { productId } = req.params as { productId: string };
         console.log('Product ID:', productId);
